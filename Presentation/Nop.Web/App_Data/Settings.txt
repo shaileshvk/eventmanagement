@@ -1,0 +1,2 @@
+DataProvider: sqlserver
+DataConnectionString: Data Source=Automation-pc\sqlexpress;Initial Catalog=nop38;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=sa123

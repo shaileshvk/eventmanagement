@@ -1,0 +1,140 @@
+                                          Event Project(change the add associated product page)
+                                          ----------------------------------------------------
+
+1.aded view
+\shailesh\nopcommerce\presentation\nop.web\administration\views\product\associatedproductaddpopup1.cshtml
+
+-------------------------------------------------
+
+2.aded (get and post) associatedproductaddpopup1 controllers
+
+-----------------------------------------
+get method
+3.     public ActionResult AssociatedProductAddPopup1(int productId)
+        {
+            //if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            //    return AccessDeniedView();
+
+            //var model = new ProductModel.AddAssociatedProductModel();
+            ////a vendor should have access only to his products
+            //model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            ////categories
+            //model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            //foreach (var c in categories)
+            //    model.AvailableCategories.Add(c);
+
+            ////manufacturers
+            //model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+
+            //    model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            ////stores
+            //model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //foreach (var s in _storeService.GetAllStores())
+            //    model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            ////vendors
+            //model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            //    model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            ////product types
+            //model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+
+            //model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+
+            var model = new ProductModel();
+
+            PrepareProductModel(model, null, true, true);
+            AddLocales(_languageService, model.Locales);
+            PrepareAclModel(model, null, false);
+            PrepareStoresMappingModel(model, null, false);
+            PrepareCategoryMappingModel(model, null, false);
+            PrepareManufacturerMappingModel(model, null, false);
+            PrepareDiscountMappingModel(model, null, false);
+
+           // return View(model);
+
+       //     return View("Create", model);
+
+            return RedirectToAction("Create1","Product");
+        }
+-----------------------------------------------------------
+
+
+4.changed the create action method
+
+aded ProductModel.AddAssociatedProductModel model1
+
+Create(ProductModel model, ProductModel.AddAssociatedProductModel model1, bool continueEditing)
+
+----------------------------------------------------------------------------------
+5.created copy of create get and post methods with name create1
+
+----------------------------------------------------------------------------------
+6.added following custom code in the create1 post method
+
+                //custom code starts
+                int ids =product.Id;
+                var product1 = _productService.GetProductById(ids);
+                if (product != null)
+                {
+                    product1.ParentGroupedProductId = parentprodctid;
+                    //product1.ParentGroupedProductId = product.ParentGroupedProductId;
+                    _productService.UpdateProduct(product);
+                }
+                //custom code ends
+
+---------------------------------------------------------------------------------
+7.To delete the sidebar menu in create1 page added the following script in create1.cshtml
+
+   <style>
+        .main-header {
+            display: none !important;
+        }
+
+        .content-wrapper, .right-side, .main-footer {
+            margin-left: 2px !important;
+        }
+        .main-sidebar, .left-side {
+            display: none !important;
+        }
+    </style>
+
+---------------------------------------------------------------------------------
+8.to avoid the rediction of page from creat1 to list
+
+a)aded a exit method
+
+public ActionResult exit()
+        {
+
+            return View();
+        }
+
+b) in create1 post method
+
+return RedirectToAction("exit");
+
+c)in exit.cshtml add the script  
+
+    <script>
+
+    $( document ).ready(function() {
+        //alert( "document loaded" );
+        window.open('', '_self').close();
+    });
+
+   
+    </script>
+
+---------------------------------------------------------------------------------------------------------------------
+
+
+
+
